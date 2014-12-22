@@ -11,3 +11,4 @@ pom.xml.asc
 *.swo
 *.swp
 resources/us-census.db
+resources/public/main.js

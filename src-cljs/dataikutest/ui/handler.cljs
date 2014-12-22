@@ -9,7 +9,7 @@
    (set-html! (sel1 :#table-div) rendered)))
 
 (defn handler-by-age [response]
-  (update-table (clj->js {:distributions response})))
+  (update-table (clj->js response)))
 
 (defn error-handler [{:keys [status status-text]}]
   (.log js/console (str "something bad happened: " status " " status-text)))

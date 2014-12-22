@@ -16,11 +16,26 @@
 
 (defn columns
   []
-  (->> (jdbc/query mysql-db [(str "select * from `" table "` LIMIT 1;")])
+  (->> (jdbc/query mysql-db [(str "SELECT * FROM `" table "` LIMIT 1;")])
        (first)
        (keys)
        (map name)
        (remove #{"age"})))
+
+(defn count-all
+  []
+  (->> (jdbc/query mysql-db [(str "SELECT Count(*) as count FROM `" table "`;")])
+       (first)
+       (:count)))
+
+(defn count-values
+  [column]
+  (->> (jdbc/query mysql-db [(str "SELECT Count(*) as count_values FROM 
+                                  (SELECT `" column "`
+                                       FROM `" table "`
+                                       GROUP BY `" column "`);")])
+       (first)
+       (:count_values)))
 
 (defn group-by-age
   [column]
@@ -46,9 +61,14 @@
            {:columns (map (fn [x] {:col x :selected (= x col)}) cols)
             :distributions-template (slurp (io/file (io/resource dist-template)))})))
   (GET "/api/byage/:column" [column] 
+    (let [dist (group-by-age column)
+          countdist (reduce + (map :count dist))]
        (if (column-exists? column)  
-         {:body (group-by-age column)}
-         {:status 404 :body (str column " column doesn't exist in the db")}))
+         {:body 
+          {:distributions dist 
+           :all_count (- (count-values column) (count dist))
+           :left (- (count-all) countdist)}}
+         {:status 404 :body (str column " column doesn't exist in the db")})))
   (route/resources "/public/")
   (route/not-found "Not Found"))
 
