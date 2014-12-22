@@ -44,7 +44,6 @@
           dist (into [] (group-by-age col))]
        (render-resource "public/index.mustache" 
            {:columns (map (fn [x] {:col x :selected (= x col)}) cols)
-            :distributions (render-resource dist-template {:distributions dist})
             :distributions-template (slurp (io/file (io/resource dist-template)))})))
   (GET "/api/byage/:column" [column] 
        (if (column-exists? column)  

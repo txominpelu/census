@@ -10,3 +10,4 @@ pom.xml.asc
 /.nrepl-port
 *.swo
 *.swp
+resources/us-census.db
