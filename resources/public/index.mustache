@@ -1,0 +1,25 @@
+<html>
+<head>
+    <!-- Client side templates -->
+    <script type="text/html" id="table-template">
+        {{{distributions-template}}}
+    </script>
+</head>
+<body>
+    <div id="options-div">
+      <form>
+        <label for="variable"> Variable: </label>
+        <select name="variable" id="columns">
+          {{#columns}}
+          <option {{#selected}}selected{{/selected}}>{{col}}</option>
+          {{/columns}}
+        </select>
+      </form>
+    </div>
+    <div id="table-div">
+      {{{distributions}}}
+    </div>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/0.8.1/mustache.js"></script>
+    <script type="text/javascript" src="/public/main.js"></script>
+</body>
+</html>
